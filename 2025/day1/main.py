@@ -6,7 +6,9 @@ from typing import Generator, Literal
 import pydantic
 
 input_file = Path(__file__).parent / 'input.txt'
+assert input_file.is_file()
 test_input_file = Path(__file__).parent / 'test_input.txt'
+assert test_input_file.is_file()
 
 class Line(pydantic.BaseModel):
     direction: Literal["L", "R"]
