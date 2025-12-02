@@ -1,5 +1,7 @@
 import re
+from datetime import timedelta
 from pathlib import Path
+from time import perf_counter_ns
 from typing import Generator, Literal
 import pydantic
 
@@ -42,4 +44,6 @@ def main() -> None:
     print(f"cursor={cursor} counter={counter} [FINAL]")
 
 if __name__ == "__main__":
+    started = perf_counter_ns()
     main()
+    print(f"took {timedelta(microseconds=(perf_counter_ns() - started) / 1_000)}")
