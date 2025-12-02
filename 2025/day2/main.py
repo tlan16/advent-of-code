@@ -1,6 +1,3 @@
-import os
-import re
-from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
 from pathlib import Path
 from time import perf_counter_ns
@@ -53,7 +50,7 @@ def read_input(file: Path) -> Generator[Input]:
 
 def main() -> None:
     result = 0
-    for input in read_input(test_input_file):
+    for input in read_input(input_file):
         print(f"Processing input: {input}")
         input_result = input.compute_invalid_id()
         print(f"\tResult: {input_result}")
@@ -61,23 +58,7 @@ def main() -> None:
             result += input_result
     print(f"Final result: {result}")
 
-def main_threaded() -> None:
-    result = 0
-    with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
-        started_within_thread = perf_counter_ns()
-        futures = (
-            executor.submit(input.compute_invalid_id)
-            for input in read_input(input_file)
-        )
-        # Gather results as they complete
-        for future in futures:
-            future_result = future.result()
-            if future_result is not None:
-                result += future_result
-        print(f"Without tread overhead took {timedelta(microseconds=(perf_counter_ns() - started_within_thread) / 1_000)}")
-    print(f"Final result: {result}")
-
 if __name__ == "__main__":
     started = perf_counter_ns()
-    main_threaded()
+    main()
     print(f"Overall took {timedelta(microseconds=(perf_counter_ns() - started) / 1_000)}")
