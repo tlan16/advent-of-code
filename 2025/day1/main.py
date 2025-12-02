@@ -14,6 +14,8 @@ class Line(pydantic.BaseModel):
     direction: Literal["L", "R"]
     offset: int
 
+    model_config = {"frozen": True}
+
 
 def read_input(file: Path) -> Generator[Line]:
     with open(file, 'r') as file:
