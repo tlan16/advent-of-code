@@ -8,11 +8,9 @@ import pydantic
 input_file = Path(__file__).parent / 'input.txt'
 test_input_file = Path(__file__).parent / 'test_input.txt'
 
-valid_line_pattern = re.compile(r"^[L|R]\d+$")
-
 class Line(pydantic.BaseModel):
     direction: Literal["L", "R"]
-    offset: int
+    offset: int = pydantic.Field(gt=0)
 
     model_config = {"frozen": True}
 
@@ -22,9 +20,8 @@ def read_input(file: Path) -> Generator[Line]:
         for line in file:
             line = line.strip()
             if len(line) > 0:
-                assert valid_line_pattern.match(line), f"Invalid line format: {line}"
                 # noinspection PyTypeChecker
-                yield Line(direction=line[0], offset=int(line[1:]))
+                yield Line(direction=line[0], offset=line[1:])
 
 while_size = 100
 def rotate(initial_position: int, line: Line) -> int:
